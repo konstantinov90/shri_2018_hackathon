@@ -1,107 +1,47 @@
 
 
-// function arrayToObj(arr) {
-//     const obj = {};
-//     arr.reduce((o, el) => {
-//         o[el.name] = el.value;
-//         return o;
-//     }, obj);
-//     return obj;
-// }
 
-// const testData = [
-//     {name: 'b', value: 11},
-//     {name: 'a', value: 10},
-//     {name: 'c', value: 12},
-//     {name: 'd', value: 13},
-//     {name: 'e', value: 'val'},
-//     {name: 'g', value: '10'},
-//     {name: 'h', value: '1231'},
-//     {name: 'z', value: 'adaasd'},
-//     {name: 'zf', value: 'adaasd'},
-//     {name: 't', value: () => 'test'},
-//     {name: 'rasd', value: 10},
-//     {name: 'asd', value: 10},
-//     {name: 'asd', value: 10},
-// ];
+function sort(arr) {
+    let portion = 1;
+    while (portion <= arr.length) {
 
-// console.log(arrayToObj(testData));
+        for (let i = 0; i <= arr.length; i += portion * 2) {
+            const left = arr.slice(i, i + portion);
+            const right = arr.slice(i + portion, i + 2 * portion);
+            let res = []
 
+            let leftEl = left.shift();
+            let rightEl = right.shift();
 
-function makeSpiral(dim) {
-
-    const arr = new Array(dim);
-    for (let i = 0; i < dim; i++) {
-        arr[i] = new Array(dim);
-    }
-
-
-
-    function printArr(arr) {
-        console.log('============')
-        return arr.map(a => {
-            return a.join(' ');
-        }).join('\n');
-    }
-
-    function checkCondition(arr) {
-        for (let j = 0; j< arr.length; j++) {
-            for (let i = 0; i < arr[j].length; i++) {
-                if (arr[j][i] === undefined) {
-                    return true;
+            while (leftEl || rightEl) {
+                if (leftEl === undefined) {
+                    res.push(rightEl);
+                    res = res.concat(right);
+                    break;
+                }
+                if (rightEl === undefined) {
+                    res.push(leftEl);
+                    res = res.concat(left);
+                    break;
+                }
+                if (leftEl < rightEl) {
+                    res.push(leftEl);
+                    leftEl = left.shift();
+                } else {
+                    res.push(rightEl)
+                    rightEl = right.shift();
                 }
             }
-        }
-        return false;
+            arr = [...arr.slice(0, i), ...res, ...arr.slice(i+portion * 2, arr.length)];
+        }   
+
+
+        portion *= 2;
     }
-
-    function changeDirection(x,y) {
-        let newX;
-        let newY;
-        switch (x) {
-            case 1:
-            case -1:
-                newX = 0;
-                break;
-            default:
-                newX = y;
-        }
-
-        switch (y) {
-            case 1:
-            case -1:
-                newY = 0;
-                break;
-            default:
-                newY = -x;
-        }
-        return [newX, newY];
-    }
-
-    let dx = 0;
-    let dy = 1;
-
-    let [x,y] = [0,0];
-
-    let val = 0;
-    console.log(checkCondition(arr))
-    // for (let i = 0; i < 7; i++) {
-    while (checkCondition(arr)) {
-        for (; x >= 0 && y >= 0 && x < dim && y < dim; x+=dx, y+=dy) {
-            if (arr[x][y] || arr[x][y] === 0) break;
-            arr[x][y] = val++;
-        }
-        x -= dx;
-        y -= dy;
-        [dx, dy] = changeDirection(dx, dy);
-        x += dx;
-        y += dy;
-
-    }
-
-    appendTextToBody(printArr(arr));
-
+    return arr;
 }
 
-makeSpiral(4);
-makeSpiral(5);
+problem = [1,2,3,5324,532,1,41,312,313,456,4,245,3,12,31,1231,3];
+console.log(problem)
+
+console.log(sort(problem))

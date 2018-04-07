@@ -41,7 +41,7 @@ function sort(arr) {
     return arr;
 }
 
-problem = [1,2,3,5324,532,1,41,312,313,456,4,245,3,12,31,1231,3];
+problem = [1,2,3,5324,532,1,41,312,313,456,4,245,3,12,31,1231,3, 123, 675, 345, 8234, 123,54,87,12];
 console.log(problem)
 
 console.log(sort(problem))

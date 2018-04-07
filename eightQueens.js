@@ -45,27 +45,28 @@ class Field {
         }
     }
 
-    show() {
+    show(clazz) {
         let str = '';
         for (let i = 0; i < this.dim; i++) {
+            str += '|'
             for (let j = 0; j < this.dim; j++) {
                 const val = this.get([i,j]);
                 let visual;
                 if (val === 2) {
                     visual = '⚜️';
                 } else if (val === 1) {
-                    visual = 'x';
-                } else if ((i + j)%2 === 0) {
-                    visual = '□';
+                    visual = '❌';
+                } else if ((i + j) % 2 === 0) {
+                    visual = '⬜';
                 } else {
-                    visual = '■';
+                    visual = '⬛';
                 }
                 
-                str += `|${visual}`;
+                str += `<span>${visual}|</span>`;
             }
-            str += '|' + '\n';
+            str += '</br>';
         }
-        console.log(str);
+        return `<div class="${clazz}">${str}</div>`;
     }
     copy() {
         const copyField = new Field(this.dim);
@@ -85,8 +86,10 @@ function processColumn(j, dim, field) {
     const freeCells = field.freeColumn(j);
     if (j === dim - 1 && freeCells.length === 1) {
         field.put(freeCells[0]);
-        console.log(`решение ${++solutionCounter} найдено`);
-        field.show();
+        requestAnimationFrame(() => {
+            appendHTMLAfter(field.show(), '.field');
+            appendTextAfter(`решение ${++solutionCounter} найдено`, '.field');
+        });
         return;
     }
     for (cell of freeCells) {
@@ -96,8 +99,15 @@ function processColumn(j, dim, field) {
     }
 }
 
+function processField(dim) {
+    prependTextToBody(`Ищем решения задачи для доски ${dim} на ${dim}`, '.field');
+    processColumn(0, dim, new Field(dim));
+}
+
+
+const field = new Field(16);
+field.put([3, 5]);
+appendHTMLToBody(field.show('field'));
+
 const DIM = 8;
-
-const field = new Field(DIM);
-
-processColumn(0, DIM, field);
+processField(DIM)
